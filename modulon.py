@@ -28,10 +28,22 @@ def sigmoid(z):
 
 
 def logr_predict_proba(x, w, m):
+    """
+    Predict probability method.
+    :param x : array of feature vectors
+    :param w : array of weight values
+    :param m : array of modulus values
+    """
     return sigmoid(net_input(x, w, m))
 
 
 def logr_predict(x, w, m):
+    """
+    Prdeict method.
+    :param x : array of feature vectors
+    :param w : array of weight values
+    :param m : array of modulus values
+    """
     pred = []
     for i in logr_predict_proba(x, w, m):
         if i >= 0.5:
@@ -42,23 +54,43 @@ def logr_predict(x, w, m):
 
 
 def logr_cost(x, y, w, m):
+    """
+    Log loss cost function method.
+    :param x : array of feature vectors
+    :param y : array of expected outputs
+    :param w : array of weight values
+    :param m : array of modulus values
+    """
     l = len(x)
     h = logr_predict_proba(x, w, m)
     sum_ = sum([(y[i] * math.log(h[i])) + (1 - y[i]) * math.log(1 - h[i]) for i in range(l)])
     return sum_ / (-1 * l)
 
 
-def logr_gradient(x, y, w):
+def logr_gradient(x, y, w, m):
+    """
+    Gradient computation function.
+    :param x : array of feature vectors
+    :param y : array of expected outputs
+    :param w : array of weight values
+    :param m : array of modulus values
+    """
     l = len(x)
-    phi = logr_predict_proba(x, w)
+    phi = logr_predict_proba(x, w, m)
     grad = [0 for i in range(len(w))]
     for i in range(len(grad)):
-        grad[i] += sum([(y[j] - phi[j]) * (-1 * x[j][i]) for j in range(m)])
+        grad[i] += sum([(y[j] - phi[j]) * (-1 * x[j][i]) for j in range(l)])
         grad[i] /= l
     return grad
 
 
 def logr_gradient_descent(x, y, w_init, m_init, eta, n_iter):
+    """
+    Gradient descent optimization method.
+    :param x : array of feature vectors
+    :param y : array of expected outputs
+    :param w_init : 
+    """
     w = w_init
     m = m_init
     for _ in range(n_iter):
