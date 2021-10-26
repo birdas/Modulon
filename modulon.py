@@ -3,6 +3,7 @@ import math
 
 def net_input(x, w, m):
     """
+    Net input method. 
     :param x : array of feature vectors
     :param w : array of weights values
     :param m : array of modulus values
@@ -11,6 +12,10 @@ def net_input(x, w, m):
 
 
 def sigmoid(z):
+    """
+    Sigmoid activation function.
+    :param z : input to the activation funciton
+    """
     sig = []
     for i in z:
         if i == float('inf'):
@@ -22,13 +27,13 @@ def sigmoid(z):
     return sig
 
 
-def logr_predict_proba(x, w):
-    return sigmoid(net_input(x, w))
+def logr_predict_proba(x, w, m):
+    return sigmoid(net_input(x, w, m))
 
 
-def logr_predict(x, w):
+def logr_predict(x, w, m):
     pred = []
-    for i in logr_predict_proba(x, w):
+    for i in logr_predict_proba(x, w, m):
         if i >= 0.5:
             pred.append(1)
         else:
@@ -36,20 +41,20 @@ def logr_predict(x, w):
     return pred
 
 
-def logr_cost(x, y, w):
-    m = len(x)
-    h = logr_predict_proba(x, w)
-    sum_ = sum([(y[i] * math.log(h[i])) + (1 - y[i]) * math.log(1 - h[i]) for i in range(m)])
-    return sum_ / (-1 * m)
+def logr_cost(x, y, w, m):
+    l = len(x)
+    h = logr_predict_proba(x, w, m)
+    sum_ = sum([(y[i] * math.log(h[i])) + (1 - y[i]) * math.log(1 - h[i]) for i in range(l)])
+    return sum_ / (-1 * l)
 
 
 def logr_gradient(x, y, w):
-    m = len(x)
+    l = len(x)
     phi = logr_predict_proba(x, w)
     grad = [0 for i in range(len(w))]
     for i in range(len(grad)):
         grad[i] += sum([(y[j] - phi[j]) * (-1 * x[j][i]) for j in range(m)])
-        grad[i] /= m
+        grad[i] /= l
     return grad
 
 
