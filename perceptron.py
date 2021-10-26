@@ -1,7 +1,13 @@
 import math
 
-def net_input(x, w):
-    return [sum(w[j] * i[j] for j in range(len(i))) for i in x]
+
+def net_input(x, w, m):
+    """
+    :param x : array of feature vectors
+    :param w : array of weights values
+    :param m : array of modulus values
+    """
+    return [sum(w[j] * i[j] for j in range(len(x[i]))) % m[i] for i in range(len(x))]
 
 
 def sigmoid(z):
@@ -12,7 +18,7 @@ def sigmoid(z):
         elif i == float('-inf'):
             sig.append(0.0)
         else: 
-            sig.append(1 / (1 + math.exp(-1 * i))) 
+            sig.append(1 / (1 + math.exp(-i))) 
     return sig
 
 
@@ -47,8 +53,9 @@ def logr_gradient(x, y, w):
     return grad
 
 
-def logr_gradient_descent(x, y, w_init, eta, n_iter):
+def logr_gradient_descent(x, y, w_init, m_init, eta, n_iter):
     w = w_init
+    m = m_init
     for _ in range(n_iter):
         print(logr_cost(x, y, w))
         gradient = logr_gradient(x, y, w)
